@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,18 +41,24 @@ class BuscaDadosRede extends AsyncTask<URL, Void, ArrayList> {
     public ArrayList<Carro> doInBackground(URL... urls) {
         OkHttpClient client = new OkHttpClient();
 
+        Gson gson = new Gson();
+        ArrayList<Carro> listaCarros = new ArrayList<>();
+
         Request request = new Request.Builder().url(urls[0]).build();
 
         try{
             Response response = client.newCall(request).execute();
-            String teste = response.body().string();
-            teste += "";
+            String json = response.body().string();
+
+            listaCarros = gson.fromJson(json, new TypeToken<ArrayList<Carro>>(){}.getType());
+            //teste += " ";
         }catch (Exception e){
             e.printStackTrace();
+
         }
-        return null;
+        return listaCarros;
     }
     public void onPostExecute (ArrayList<Carro> Carro){
-
+        //int i = 0;
     }
 }
